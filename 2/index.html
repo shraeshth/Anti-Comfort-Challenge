@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple To-Do</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 2rem;
+      }
+      .done {
+        text-decoration: line-through;
+        color: gray;
+      }
+      li {
+        margin: 8px 0;
+      }
+      button {
+        margin-left: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>To-Do List</h2>
+
+    <input type="text" id="taskInput" placeholder="Enter a task" />
+    <button id="addBtn">Add</button>
+
+    <ol id="taskList"></ol>
+
+    <script>
+      let tasks = [];
+
+      // References to DOM elements
+      const input = document.getElementById("taskInput");
+      const addBtn = document.getElementById("addBtn");
+      const taskList = document.getElementById("taskList");
+
+      // Render tasks on screen
+      function render() {
+        taskList.innerHTML = ""; // clear the list
+        tasks.forEach((task, index) => {
+          const li = document.createElement("li");
+
+          // task text
+          const span = document.createElement("span");
+          span.textContent = task.text;
+          if (task.done) span.classList.add("done");
+
+          // done button
+          const doneBtn = document.createElement("button");
+          doneBtn.textContent = "Done";
+          doneBtn.onclick = () => {
+            task.done = !task.done;
+            render();
+          };
+
+          // delete button
+          const delBtn = document.createElement("button");
+          delBtn.textContent = "Delete";
+          delBtn.onclick = () => {
+            tasks.splice(index, 1); // remove one item
+            render();
+          };
+
+          li.append(span, doneBtn, delBtn);
+          taskList.appendChild(li);
+        });
+      }
+
+      // Add new task
+      function addTask() {
+        const text = input.value.trim();
+        if (!text) return;
+        tasks.push({ text, done: false });
+        input.value = "";
+        render();
+      }
+
+      // Event listeners
+      addBtn.onclick = addTask;
+      input.onkeypress = (e) => {
+        if (e.key === "Enter") addTask();
+      };
+    </script>
+  </body>
+</html>
